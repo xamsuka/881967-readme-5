@@ -1,7 +1,7 @@
 # Личный проект «Readme»
 
-* Студент: [Владислав Козловский](https://up.htmlacademy.ru/nodejs-2/5/user/881967).
-* Наставник: `Неизвестно`.
+- Студент: [Владислав Козловский](https://up.htmlacademy.ru/nodejs-2/5/user/881967).
+- Наставник: [Александр Сушко](https://htmlacademy.ru/profile/sashasushko).
 
 ---
 
