@@ -1,0 +1,57 @@
+{
+  "name": "blogs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/blogs/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/blogs",
+        "main": "apps/blogs/src/main.ts",
+        "tsConfig": "apps/blogs/tsconfig.app.json",
+        "assets": ["apps/blogs/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/blogs/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "blogs:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "blogs:build:development"
+        },
+        "production": {
+          "buildTarget": "blogs:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/blogs/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/blogs/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
