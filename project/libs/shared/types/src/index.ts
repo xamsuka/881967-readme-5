@@ -1,1 +1,1 @@
-export * from './lib/libs-shared-types';
+export { User } from './lib/user.interface';
