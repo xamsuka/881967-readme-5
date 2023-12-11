@@ -67,3 +67,10 @@ export interface LinkPost extends Post {
   url: string;
   description: string;
 }
+
+export type PostVariant =
+  | VideoPost
+  | TextPost
+  | QuotePost
+  | ImagePost
+  | LinkPost;
