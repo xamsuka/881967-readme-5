@@ -11,3 +11,4 @@ export {
   TextPost,
   VideoPost,
 } from './lib/post.interface';
+export { File } from './lib/file.interface';
