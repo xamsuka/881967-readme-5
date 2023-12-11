@@ -12,3 +12,4 @@ export {
   VideoPost,
 } from './lib/post.interface';
 export { File } from './lib/file.interface';
+export { Notification } from './lib/notification.interafce';
