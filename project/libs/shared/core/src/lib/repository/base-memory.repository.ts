@@ -6,7 +6,7 @@ import { randomUUID } from 'crypto';
 export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>>
   implements Repository<T>
 {
-  protected entities: Map<string, T>;
+  protected entities: Map<string, T> = new Map();
 
   async findOne(id: T['id']): Promise<T> {
     return this.entities.get(id);

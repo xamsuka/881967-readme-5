@@ -21,15 +21,16 @@ export class UsersService {
 
   async createOne(user: CreateUserRequestDto): Promise<LoginUserResponseDto> {
     const { email, password } = user;
-    const existUser = this.usersRepository.finByEmail(email);
+    const existUser = await this.usersRepository.finByEmail(email);
 
     if (existUser) {
       throw new ConflictException(USES_EXISTS);
     }
 
-    const createdUser = await new UserEntity(user).setPassword(password);
+    const newUserEntity = await new UserEntity(user).setPassword(password);
 
-    this.usersRepository.createOne(createdUser);
+    const { password: passwordHash, ...createdUser } =
+      await this.usersRepository.createOne(newUserEntity);
 
     return createdUser;
   }
