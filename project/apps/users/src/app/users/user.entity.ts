@@ -1,6 +1,8 @@
 import { User } from '@project/libs/shared/types';
 import { randomUUID } from 'crypto';
 import { CreateUser } from 'libs/shared/types/src/lib/user.interface';
+import { SALT_OR_ROUNDS } from './constants/users.constants';
+import { hash } from 'bcrypt';
 
 export class UserEntity implements User {
   id: string;
@@ -33,5 +35,13 @@ export class UserEntity implements User {
     this.email = email;
     this.avatarUrl = avatarUrl;
     this.createdAt = createdAt;
+  }
+
+  async setPassword(password: string) {
+    const passwordHash = await hash(password, SALT_OR_ROUNDS);
+
+    this.password = passwordHash;
+
+    return this;
   }
 }
