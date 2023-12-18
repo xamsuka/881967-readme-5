@@ -23,6 +23,9 @@
       ],
       "@project/libs/shared/types": [
         "libs/shared/types/src/index.ts"
+      ],
+      "@project/libs/shared/core": [
+        "libs/shared/core/src/index.ts"
       ]
     }
   },
