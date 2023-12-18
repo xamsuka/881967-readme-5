@@ -1,3 +1,5 @@
+import { CreateUserRequestDto } from './create-user.dto';
+
 export class UserDto {
   id: string;
   email: string;

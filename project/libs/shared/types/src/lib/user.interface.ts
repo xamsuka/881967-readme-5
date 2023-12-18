@@ -6,3 +6,5 @@ export interface User {
   avatarUrl?: string;
   createdAt?: string;
 }
+
+export interface CreateUser extends Omit<User, 'id'> {}
