@@ -1,4 +1,4 @@
-import { Entity } from '@project/libs/shared/types';
+import { Entity, PartialBy } from '@project/libs/shared/types';
 import { Repository } from './repository.interface';
 import { EntityIdType } from 'libs/shared/types/src/lib/entity.interface';
 import { randomUUID } from 'crypto';
@@ -11,17 +11,15 @@ export abstract class BaseMemoryRepository<T extends Entity<EntityIdType>>
   async findOne(id: T['id']): Promise<T> {
     return this.entities.get(id);
   }
-  async createOne(entity: Omit<T, 'id'>): Promise<T> {
+
+  async createOne(entity: PartialBy<T, 'id'>): Promise<T> {
     const entityId = randomUUID();
 
-    const newEntity = {
-      id: entityId,
-      ...entity,
-    } as T;
+    entity.id = entityId;
 
-    this.entities.set(entityId, newEntity);
+    this.entities.set(entityId, entity as T);
 
-    return newEntity;
+    return entity as T;
   }
 
   async deleteOne(id: T['id']): Promise<void> {
