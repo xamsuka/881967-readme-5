@@ -28,12 +28,12 @@ export class UserEntity implements User {
   }
 
   populate(user: CreateUser) {
-    const { email, username, avatarUrl } = user;
+    const { email, username, avatarUrl, password } = user;
 
-    this.id = randomUUID();
     this.username = username;
     this.email = email;
     this.avatarUrl = avatarUrl;
+    this.password = password;
   }
 
   async setPassword(password: string) {
@@ -42,5 +42,9 @@ export class UserEntity implements User {
     this.password = passwordHash;
 
     return this;
+  }
+
+  static fromObject(data: CreateUser): UserEntity {
+    return new UserEntity(data);
   }
 }
