@@ -4,7 +4,6 @@ export interface User {
   username: string;
   password: string;
   avatarUrl?: string;
-  createdAt?: string;
 }
 
 export interface CreateUser extends Omit<User, 'id'> {}

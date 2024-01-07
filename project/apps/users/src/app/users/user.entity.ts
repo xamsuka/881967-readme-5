@@ -28,13 +28,12 @@ export class UserEntity implements User {
   }
 
   populate(user: CreateUser) {
-    const { email, username, avatarUrl, createdAt } = user;
+    const { email, username, avatarUrl } = user;
 
     this.id = randomUUID();
     this.username = username;
     this.email = email;
     this.avatarUrl = avatarUrl;
-    this.createdAt = createdAt;
   }
 
   async setPassword(password: string) {
