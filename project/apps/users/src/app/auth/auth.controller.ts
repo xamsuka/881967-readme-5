@@ -7,13 +7,17 @@ import {
   Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import {
-  LoginUserRequestDto,
-  LoginUserResponseDto,
-} from './dto/login-user.dto';
+import { LoginUserRequestDto } from './dto/login-user.dto';
 import { CreateUserRequestDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { LoginUserResponseRdo } from './rdo/login-user.rdo';
+import { fillDto } from '@project/libs/shared/helpers';
+import { Expose } from 'class-transformer';
+
+export class UserRdo {
+  public id: string;
+}
 
 @ApiTags('authentication')
 @Controller('auth')
@@ -24,7 +28,7 @@ export class AuthController {
   ) {}
 
   @ApiResponse({
-    type: LoginUserRequestDto,
+    type: LoginUserResponseRdo,
     status: HttpStatus.OK,
     description: 'User has been successfully logged.',
   })
@@ -33,30 +37,32 @@ export class AuthController {
     description: 'Password or Login is wrong.',
   })
   @Post('login')
-  login(
+  async login(
     @Body() loginRequestDto: LoginUserRequestDto
-  ): Promise<LoginUserResponseDto> {
-    debugger;
-    return this.authService.validateUser(loginRequestDto);
+  ): Promise<LoginUserResponseRdo> {
+    const user = await this.authService.validateUser(loginRequestDto);
+    return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
 
   @ApiResponse({
+    type: LoginUserResponseRdo,
     status: HttpStatus.CREATED,
     description: 'The new user has been successfully created.',
   })
   @Post('registration')
-  registration(
+  async registration(
     @Body() createUserRequestDto: CreateUserRequestDto
-  ): Promise<LoginUserResponseDto> {
-    return this.usersService.createOne(createUserRequestDto);
+  ): Promise<LoginUserResponseRdo> {
+    const user = await this.usersService.createOne(createUserRequestDto);
+
+    return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
 
   @ApiResponse({
     status: HttpStatus.OK,
   })
-  @Post('registration')
   @Patch('restore-password')
-  restorePassword(@Request() req, @Body() updatePasswordRequestDto: any) {
+  async restorePassword(@Request() req, @Body() updatePasswordRequestDto: any) {
     return this.usersService.updatePassword(req.user, updatePasswordRequestDto);
   }
 }

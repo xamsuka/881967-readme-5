@@ -18,14 +18,17 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@project/libs/shared/config-users": [
+        "libs/shared/config/users/src/index.ts"
+      ],
+      "@project/libs/shared/core": [
+        "libs/shared/core/src/index.ts"
+      ],
       "@project/libs/shared/helpers": [
         "libs/shared/helpers/src/index.ts"
       ],
       "@project/libs/shared/types": [
         "libs/shared/types/src/index.ts"
-      ],
-      "@project/libs/shared/core": [
-        "libs/shared/core/src/index.ts"
       ]
     }
   },

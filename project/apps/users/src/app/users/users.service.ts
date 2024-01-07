@@ -1,5 +1,5 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { LoginUserResponseDto } from '../auth/dto/login-user.dto';
+
 import { CreateUserRequestDto } from './dto/create-user.dto';
 import { RestorePasswordRequestDto } from './dto/restore-user-password.dto';
 import { UsersRepository } from './users.repository';
@@ -10,6 +10,7 @@ import {
 } from './constants/users.constants';
 import { UserEntity } from './user.entity';
 import { compare, hash } from 'bcrypt';
+import { LoginUserResponseRdo } from '../auth/rdo/login-user.rdo';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,7 @@ export class UsersService {
     return this.usersRepository.findOne(id);
   }
 
-  async createOne(user: CreateUserRequestDto): Promise<LoginUserResponseDto> {
+  async createOne(user: CreateUserRequestDto): Promise<UserEntity> {
     const { email, password } = user;
     const existUser = await this.usersRepository.finByEmail(email);
 
@@ -29,16 +30,13 @@ export class UsersService {
 
     const newUserEntity = await new UserEntity(user).setPassword(password);
 
-    const { password: passwordHash, ...createdUser } =
-      await this.usersRepository.createOne(newUserEntity);
-
-    return createdUser;
+    return this.usersRepository.createOne(newUserEntity);
   }
 
   async updatePassword(
-    user: LoginUserResponseDto,
+    user: LoginUserResponseRdo,
     credentials: RestorePasswordRequestDto
-  ): Promise<void> {
+  ): Promise<UserEntity> {
     const entityUser = await this.usersRepository.findOne(user.id);
     const { currentPassword, newPassword } = credentials;
 
@@ -52,6 +50,6 @@ export class UsersService {
 
     const newUser = await entityUser.setPassword(newPasswordHash);
 
-    this.usersRepository.updateOne(user.id, newUser);
+    return this.usersRepository.updateOne(user.id, newUser);
   }
 }
