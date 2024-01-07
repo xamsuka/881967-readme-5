@@ -10,11 +10,6 @@ export class UserModel extends Document implements User {
   @Prop({
     required: true,
   })
-  id: string;
-
-  @Prop({
-    required: true,
-  })
   email: string;
 
   @Prop({
