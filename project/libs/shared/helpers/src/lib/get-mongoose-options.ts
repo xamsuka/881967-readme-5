@@ -1,10 +1,11 @@
-import { getMongoConnectionString } from '@project/libs/shared/helpers';
 import {
   MongoConfig,
   usersConfigNamespace,
 } from '@project/libs/shared/config-users';
 import { MongooseModuleAsyncOptions } from '@nestjs/mongoose';
 import { ConfigService } from '@nestjs/config';
+import { getMongoConnectionString } from './common';
+
 
 export function getMongooseOptions(): MongooseModuleAsyncOptions {
   return {
