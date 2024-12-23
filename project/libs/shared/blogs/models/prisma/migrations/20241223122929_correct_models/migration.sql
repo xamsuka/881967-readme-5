@@ -42,7 +42,6 @@ CREATE TABLE "video_content" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "url" TEXT NOT NULL,
-    "tags" TEXT[],
     "post_id" TEXT NOT NULL,
 
     CONSTRAINT "video_content_pkey" PRIMARY KEY ("id")
@@ -54,7 +53,6 @@ CREATE TABLE "text_content" (
     "name" TEXT NOT NULL,
     "text" TEXT NOT NULL,
     "announcement_text" TEXT NOT NULL,
-    "tags" TEXT[],
     "post_id" TEXT NOT NULL,
 
     CONSTRAINT "text_content_pkey" PRIMARY KEY ("id")
@@ -65,7 +63,6 @@ CREATE TABLE "quote_content" (
     "id" TEXT NOT NULL,
     "author" TEXT NOT NULL,
     "text" TEXT NOT NULL,
-    "tags" TEXT[],
     "post_id" TEXT NOT NULL,
 
     CONSTRAINT "quote_content_pkey" PRIMARY KEY ("id")
@@ -75,7 +72,6 @@ CREATE TABLE "quote_content" (
 CREATE TABLE "image_content" (
     "id" TEXT NOT NULL,
     "url" TEXT NOT NULL,
-    "tags" TEXT[],
     "post_id" TEXT NOT NULL,
 
     CONSTRAINT "image_content_pkey" PRIMARY KEY ("id")
@@ -86,7 +82,6 @@ CREATE TABLE "link_content" (
     "id" TEXT NOT NULL,
     "url" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "tags" TEXT[],
     "post_id" TEXT NOT NULL,
 
     CONSTRAINT "link_content_pkey" PRIMARY KEY ("id")

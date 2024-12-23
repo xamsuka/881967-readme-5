@@ -35,6 +35,12 @@ function getPosts() {
           text: 'Старый коментарий',
         },
       ],
+      textContent: {
+        id: '25329136-a107-4c7b-b9df-d79b017f3a21',
+        name: 'Мой первый пост',
+        text: 'Lorem',
+        announcementText: 'Самый крутой пост',
+      },
     },
     {
       id: SECOND_POST_UUID,
@@ -58,6 +64,10 @@ function getPosts() {
           text: 'Старый коментарий',
         },
       ],
+      imageContent: {
+        id: '1eca6f26-3925-4e27-aae3-1775204074dc',
+        url: 'https://steamuserimages-a.akamaihd.net/ugc/1840280105646693246/F0E67AAF3360D66DAB9DAFC7FFF5498C6DEE6CDE/?imw=512&amp;&amp;ima=fit&amp;impolicy=Letterbox&amp;imcolor=%23000000&amp;letterbox=false',
+      },
     },
   ];
 }
@@ -90,6 +100,12 @@ async function seedDb(prismaClient: PrismaClient) {
           ? {
               create: post.comments,
             }
+          : undefined,
+        imageContent: post.imageContent
+          ? { create: post.imageContent }
+          : undefined,
+        textContent: post.textContent
+          ? { create: post.textContent }
           : undefined,
       },
     });

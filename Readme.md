@@ -46,8 +46,8 @@ npx prisma format --schema ./shared/blog/models/prisma/schema.prisma
 ```
 
 npx prisma migrate dev \
---name "Added model Category" \
---schema ./shared/blog/models/prisma/schema.prisma \
+--name "Correct models" \
+--schema ./libs/shared/blogs/models/prisma/schema.prisma \
 --skip-generate
 
 ## Валидация схемы
