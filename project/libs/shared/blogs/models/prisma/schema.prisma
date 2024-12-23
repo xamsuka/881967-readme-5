@@ -28,16 +28,25 @@ enum PostStatus {
   DRAFT
 }
 
+enum ContentType {
+  VIDEO
+  TEXT
+  QUOTE
+  IMAGE
+  LINK
+}
+
 model Post {
-  id        String     @id @default(uuid())
+  id        String      @id @default(uuid())
   tags      String[]
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
   status    PostStatus
-  blog      Blog       @relation(fields: [blogId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  blogId    String     @map("blog_id")
+  blog      Blog        @relation(fields: [blogId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  blogId    String      @map("blog_id")
   comments  Comment[]
-  likeCount Int        @default(0) @map("like_count")
+  likeCount Int         @default(0) @map("like_count")
+  type      ContentType
 
   videoContent VideoContent?
   textContent  TextContent?
@@ -57,14 +66,6 @@ model Comment {
   text      String
 
   @@map("comments")
-}
-
-enum ContentType {
-  VIDEO
-  TEXT
-  QUOTE
-  IMAGE
-  LINK
 }
 
 model VideoContent {

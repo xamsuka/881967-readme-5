@@ -1,4 +1,4 @@
-import { PostStatus, PrismaClient } from '@prisma/client';
+import { ContentType, PostStatus, PrismaClient } from '@prisma/client';
 
 const FIRST_BLOG_UUID = '4be5ae83-a3f3-4900-b1ad-2baf72a2e009';
 
@@ -21,6 +21,7 @@ function getPosts() {
       status: PostStatus.PUBLISH,
       blogId: FIRST_BLOG_UUID,
       likeCount: 0,
+      type: ContentType.TEXT,
       comments: [
         {
           id: 'e8cfa2da-a0ca-4b76-b1cc-3d19c47dae9a',
@@ -50,6 +51,7 @@ function getPosts() {
       status: PostStatus.PUBLISH,
       blogId: FIRST_BLOG_UUID,
       likeCount: 10,
+      type: ContentType.IMAGE,
       comments: [
         {
           id: 'ccfac599-17db-4a05-9734-5a90d96a56ca',
@@ -96,6 +98,7 @@ async function seedDb(prismaClient: PrismaClient) {
         status: post.status,
         blogId: post.blogId,
         likeCount: post.likeCount,
+        type: post.type,
         comments: post.comments
           ? {
               create: post.comments,

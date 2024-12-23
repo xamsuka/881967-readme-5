@@ -1,13 +1,5 @@
-export enum PostType {
-  VIDEO = 'VIDEO',
-  TEXT = 'TEXT',
-  QUOTE = 'QUOTE',
-  IMAGE = 'IMAGE',
-  LINK = 'LINK',
-}
-
 export enum PostStatus {
-  PUBLISHED = 'PUBLISHED',
+  PUBLISHED = 'PUBLISH',
   DRAFT = 'DRAFT',
 }
 
@@ -19,58 +11,59 @@ export enum ContentType {
   LINK = 'LINK',
 }
 
-export interface Comment {
-  id: string;
-  text: string;
+export interface Blog {
+  id?: string;
   userId: string;
-  postId: string;
-  createdDate: string;
+  name: string;
+  posts?: Post[];
 }
 
 export interface Post {
   id: string;
-  createdUserId: string;
   tags?: string[];
-  createdDate: string;
-  updatedDate: string;
+  createdAt?: string;
+  updatedAt?: string;
   status: PostStatus;
-  isReposted?: boolean;
+  blogId: string;
+  type: ContentType;
   likeCount: number;
   comments?: Comment[];
 }
 
-export interface VideoPost extends Post {
+export interface Comment {
+  id?: string;
+  text: string;
+  postId: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface VideoContent {
+  id?: string;
   name: string;
-  type: ContentType;
   url: string;
 }
 
-export interface TextPost extends Post {
+export interface TextContent {
+  id?: string;
   name: string;
   text: string;
   announcementText: string;
-  type: ContentType;
 }
 
-export interface QuotePost extends Post {
-  type: ContentType;
+export interface QuoteContent {
+  id?: string;
+  text: string;
   author: string;
 }
 
-export interface ImagePost extends Post {
-  type: ContentType;
+export interface ImageContent {
+  id?: string;
   url: string;
 }
 
-export interface LinkPost extends Post {
-  type: ContentType;
+export interface LinkContent {
+  id?: string;
   url: string;
   description: string;
 }
-
-export type PostVariant =
-  | VideoPost
-  | TextPost
-  | QuotePost
-  | ImagePost
-  | LinkPost;
