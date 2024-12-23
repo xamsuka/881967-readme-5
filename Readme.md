@@ -49,3 +49,7 @@ npx prisma migrate dev \
 --name "Added model Category" \
 --schema ./shared/blog/models/prisma/schema.prisma \
 --skip-generate
+
+## Валидация схемы
+
+npx nx run blogs:db:lint
