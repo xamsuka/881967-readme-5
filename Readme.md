@@ -19,7 +19,7 @@ nx generate @nx/nest:module app/blog-user --project=account
 nx generate @nx/nest:module app/authentication --project=account
 ```
 
-## Заготовки для Nest 
+## Заготовки для Nest
 
 Контроллер
 
@@ -38,3 +38,14 @@ nx generate @nx/nest:service app/authentication --project=users
 ```
 nx generate @nx/node:library <ИмяБиблиотеки>
 ```
+
+## После описания первой модели, мы можем её проверить её на корректность, или проще сказать: пролинтерить. Для этого выполним команду:
+
+```
+npx prisma format --schema ./shared/blog/models/prisma/schema.prisma
+```
+
+npx prisma migrate dev \
+--name "Added model Category" \
+--schema ./shared/blog/models/prisma/schema.prisma \
+--skip-generate

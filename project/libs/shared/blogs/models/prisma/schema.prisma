@@ -12,3 +12,116 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Blog {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  posts  Post[]
+  name   String
+
+  @@map("blogs")
+}
+
+enum PostStatus {
+  PUBLISH
+  DRAFT
+}
+
+model Post {
+  id        String     @id @default(uuid())
+  tags      String[]
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  status    PostStatus
+  blog      Blog       @relation(fields: [blogId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  blogId    String     @map("blog_id")
+  comments  Comment[]
+  likeCount Int        @default(0) @map("like_count")
+
+  videoContent VideoContent?
+  textContent  TextContent?
+  quoteContent QuoteContent?
+  imageContent ImageContent?
+  linkContent  LinkContent?
+
+  @@map("posts")
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  postId    String   @map("post_id")
+  Post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  text      String
+
+  @@map("comments")
+}
+
+enum ContentType {
+  VIDEO
+  TEXT
+  QUOTE
+  IMAGE
+  LINK
+}
+
+model VideoContent {
+  id   String   @id @default(uuid())
+  name String
+  url  String
+  tags String[]
+
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post_id String @unique @map("post_id")
+
+  @@map("video_content")
+}
+
+model TextContent {
+  id               String   @id @default(uuid())
+  name             String
+  text             String
+  announcementText String   @map("announcement_text")
+  tags             String[]
+
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post_id String @unique @map("post_id")
+
+  @@map("text_content")
+}
+
+model QuoteContent {
+  id     String   @id @default(uuid())
+  author String
+  text   String
+  tags   String[]
+
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post_id String @unique @map("post_id")
+
+  @@map("quote_content")
+}
+
+model ImageContent {
+  id   String   @id @default(uuid())
+  url  String
+  tags String[]
+
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post_id String @unique @map("post_id")
+
+  @@map("image_content")
+}
+
+model LinkContent {
+  id          String   @id @default(uuid())
+  url         String
+  description String
+  tags        String[]
+
+  post    Post   @relation(fields: [post_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  post_id String @unique @map("post_id")
+
+  @@map("link_content")
+}
