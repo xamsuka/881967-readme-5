@@ -6,14 +6,13 @@ import {
   Post,
   Request,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { LoginUserRequestDto } from './dto/login-user.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { fillDto } from '@project/libs/shared/helpers';
 import { CreateUserRequestDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { LoginUserRequestDto } from './dto/login-user.dto';
 import { LoginUserResponseRdo } from './rdo/login-user.rdo';
-import { fillDto } from '@project/libs/shared/helpers';
-import { Expose } from 'class-transformer';
 
 export class UserRdo {
   public id: string;

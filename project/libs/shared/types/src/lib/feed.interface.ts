@@ -1,7 +1,7 @@
-import { PostVariant } from './post.interface';
+import { Post } from './post.interface';
 
 export interface Feed {
   id: string;
-  posts?: PostVariant[];
+  posts?: Post[];
   subscriptionUserIds?: string[];
 }

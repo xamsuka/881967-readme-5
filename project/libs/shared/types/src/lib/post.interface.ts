@@ -11,13 +11,6 @@ export enum ContentType {
   LINK = 'LINK',
 }
 
-export interface Blog {
-  id?: string;
-  userId: string;
-  name: string;
-  posts?: Post[];
-}
-
 export interface Post {
   id: string;
   tags?: string[];

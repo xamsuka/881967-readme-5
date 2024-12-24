@@ -14,15 +14,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Blog {
-  id     String @id @default(uuid())
-  userId String @map("user_id")
-  posts  Post[]
-  name   String
-
-  @@map("blogs")
-}
-
 enum PostStatus {
   PUBLISH
   DRAFT
@@ -34,6 +25,16 @@ enum ContentType {
   QUOTE
   IMAGE
   LINK
+}
+
+model Blog {
+  id     String @id @default(uuid())
+  userId String @map("user_id")
+  posts  Post[]
+  name   String
+
+  @@index([name])
+  @@map("blogs")
 }
 
 model Post {
