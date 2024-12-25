@@ -50,6 +50,6 @@ npx prisma migrate dev \
 --schema ./libs/shared/blogs/models/prisma/schema.prisma \
 --skip-generate
 
-## Валидация схемы
+## Валидация схемы blogs
 
 npx nx run blogs:db:lint
