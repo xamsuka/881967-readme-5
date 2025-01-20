@@ -28,7 +28,7 @@ export class BlogsRepository extends BasePostgresRepository<BlogEntity, Blog> {
     });
   }
 
-  async findOne(id: string): Promise<BlogEntity> {
+  async findOne(id: string): Promise<BlogEntity | null> {
     const blog = await this.client.blog.findFirst({
       where: {
         id,
@@ -37,10 +37,6 @@ export class BlogsRepository extends BasePostgresRepository<BlogEntity, Blog> {
         posts: true,
       },
     });
-
-    if (!blog) {
-      throw new NotFoundException(`Блог с идентификатором ${id} не найден.`);
-    }
 
     return this.createEntityFromDocument(blog);
   }

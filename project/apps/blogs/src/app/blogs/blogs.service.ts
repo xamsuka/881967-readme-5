@@ -1,31 +1,85 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { BlogsRepository } from './blogs.repository';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { BlogEntity } from './entities/blog.entity';
 import { UpdateBlogDto } from './dto/update-blog.dto';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class BlogsService {
   constructor(private blogRepository: BlogsRepository) {}
 
-  createOne(blogInput: CreateBlogDto): Promise<BlogEntity> {
-    const newBlog = BlogEntity.fromObject(blogInput);
+  async createOne(blogInput: CreateBlogDto): Promise<BlogEntity> {
+    try {
+      const newBlog = BlogEntity.fromObject(blogInput);
+      return await this.blogRepository.createOne(newBlog);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Блог с наименованием "${blogInput.name}" уже существует.`
+        );
+      }
 
-    return this.blogRepository.createOne(newBlog);
+      throw error;
+    }
   }
 
-  updateOne(id: string, blogInput: UpdateBlogDto): Promise<BlogEntity> {
-    const blog = BlogEntity.fromObject(blogInput);
+  async updateOne(id: string, blogInput: UpdateBlogDto): Promise<BlogEntity> {
+    try {
+      const blog = BlogEntity.fromObject(blogInput);
 
-    return this.blogRepository.updateOne(id, blog);
+      return await this.blogRepository.updateOne(id, blog);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException(`Блог с идентификатором ${id} не найден.`);
+      }
+
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ConflictException(
+          `Блог с наименованием "${blogInput.name}" уже существует.`
+        );
+      }
+
+      throw error;
+    }
   }
 
-  deleteOne(id: string): Promise<void> {
-    return this.blogRepository.deleteOne(id);
+  async deleteOne(id: string): Promise<void> {
+    try {
+      await this.blogRepository.deleteOne(id);
+    } catch (error) {
+      if (
+        error instanceof Prisma.PrismaClientKnownRequestError &&
+        error.code === 'P2025'
+      ) {
+        throw new NotFoundException(`Блог с идентификатором ${id} не найден.`);
+      }
+
+      throw error;
+    }
   }
 
-  findOne(id: string): Promise<BlogEntity> {
-    return this.blogRepository.findOne(id);
+  async findOne(id: string): Promise<BlogEntity> {
+    const blogEntity = await this.blogRepository.findOne(id);
+
+    if (!blogEntity) {
+      throw new NotFoundException(`Блог с идентификатором ${id} не найден.`);
+    }
+
+    return blogEntity;
   }
 
   findAll(): Promise<BlogEntity[]> {
