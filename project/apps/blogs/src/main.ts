@@ -8,6 +8,8 @@ import { NestFactory } from '@nestjs/core';
 
 import { AppModule } from './app/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import { blogsConfigNamespace } from 'libs/shared/config/blogs/src/lib/configs/blogs.config.namespace';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,17 +25,17 @@ async function bootstrap() {
   app.setGlobalPrefix(globalPrefix);
   app.useGlobalPipes(new ValidationPipe());
 
-  // const configService = app.get(ConfigService);
+  const configService = app.get(ConfigService);
 
-  // const applicationConfig = configService.get(usersConfigNamespace.application);
-  // const { port } = applicationConfig;
+  const applicationConfig = configService.get(blogsConfigNamespace.application);
+  const { port } = applicationConfig;
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  await app.listen(3040);
+  await app.listen(port);
   Logger.log(
-    `🚀 Application is running on: http://localhost:${3040}/${globalPrefix}`
+    `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
 }
 
