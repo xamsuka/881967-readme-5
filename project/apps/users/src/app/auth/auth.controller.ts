@@ -40,6 +40,7 @@ export class AuthController {
     @Body() loginRequestDto: LoginUserRequestDto
   ): Promise<LoginUserResponseRdo> {
     const user = await this.authService.validateUser(loginRequestDto);
+
     return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
 
@@ -53,7 +54,7 @@ export class AuthController {
     @Body() createUserRequestDto: CreateUserRequestDto
   ): Promise<LoginUserResponseRdo> {
     const user = await this.usersService.createOne(createUserRequestDto);
-
+    console.log('user', user);
     return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
 

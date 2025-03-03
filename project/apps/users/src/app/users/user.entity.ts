@@ -1,6 +1,4 @@
 import { User } from '@project/libs/shared/types';
-import { randomUUID } from 'crypto';
-import { CreateUser } from 'libs/shared/types/src/lib/user.interface';
 import { SALT_OR_ROUNDS } from './constants/users.constants';
 import { hash } from 'bcrypt';
 
@@ -12,8 +10,8 @@ export class UserEntity implements User {
   avatarUrl?: string;
   createdAt?: string;
 
-  constructor(createUser: CreateUser) {
-    this.populate(createUser);
+  constructor(user: User) {
+    this.populate(user);
   }
 
   toPOJO() {
@@ -27,13 +25,15 @@ export class UserEntity implements User {
     };
   }
 
-  populate(user: CreateUser) {
-    const { email, username, avatarUrl, password } = user;
+  populate(user: User) {
+    const { email, username, avatarUrl, password, createdAt, id } = user;
 
+    this.id = id;
     this.username = username;
     this.email = email;
     this.avatarUrl = avatarUrl;
     this.password = password;
+    this.createdAt = createdAt;
   }
 
   async setPassword(password: string) {
@@ -44,7 +44,7 @@ export class UserEntity implements User {
     return this;
   }
 
-  static fromObject(data: CreateUser): UserEntity {
+  static fromObject(data: User): UserEntity {
     return new UserEntity(data);
   }
 }

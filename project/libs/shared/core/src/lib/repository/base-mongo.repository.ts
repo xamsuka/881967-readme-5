@@ -33,8 +33,7 @@ export abstract class BaseMongoRepository<
     const newEntity = new this.model(entity.toPOJO());
     await newEntity.save();
 
-    entity.id = newEntity._id.toString();
-    return entity as EntityType;
+    return this.createEntityFromDocument(newEntity);
   }
 
   async deleteOne(id: EntityType['id']): Promise<void> {

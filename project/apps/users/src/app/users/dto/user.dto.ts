@@ -1,5 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
+import { IsEmail, IsString, IsUrl } from 'class-validator';
+import {
+  AUTH_USER_AVATAR_NOT_VALID,
+  AUTH_USER_EMAIL_NOT_VALID,
+} from '../../auth/constants/auth.constants';
 
 export class UserDto {
   @ApiProperty({
@@ -13,6 +18,7 @@ export class UserDto {
     description: 'User email',
     example: 'example@mail.ru',
   })
+  @IsEmail({}, { message: AUTH_USER_EMAIL_NOT_VALID })
   @Expose()
   email: string;
 
@@ -21,19 +27,21 @@ export class UserDto {
     example: 'Vladislav Kozovsky',
   })
   @Expose()
+  @IsString()
   username: string;
 
   @ApiProperty({
     description: 'User password',
     example: '123321',
   })
-  @Exclude()
+  @IsString()
   password: string;
 
   @ApiProperty({
     description: 'User avatar url',
     example: 'https://example.ru/image.png',
   })
+  @IsUrl({}, { message: AUTH_USER_AVATAR_NOT_VALID })
   @Expose()
   avatarUrl?: string;
 
