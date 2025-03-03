@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { IsString, IsUUID } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class UpdateBlogDto {
   @ApiProperty({
@@ -10,8 +10,4 @@ export class UpdateBlogDto {
   @IsString()
   @Expose()
   name: string;
-
-  @IsUUID()
-  @Exclude()
-  userId: string;
 }

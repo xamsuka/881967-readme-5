@@ -33,17 +33,15 @@ export class BlogsService {
 
   async updateOne(id: string, blogInput: UpdateBlogDto): Promise<BlogEntity> {
     try {
-      const blog = BlogEntity.fromObject(blogInput);
+      const currentBlog = await this.findOne(id);
+
+      const blog = BlogEntity.fromObject({
+        ...blogInput,
+        userId: currentBlog.userId,
+      });
 
       return await this.blogRepository.updateOne(id, blog);
     } catch (error) {
-      if (
-        error instanceof Prisma.PrismaClientKnownRequestError &&
-        error.code === 'P2025'
-      ) {
-        throw new NotFoundException(`Блог с идентификатором ${id} не найден.`);
-      }
-
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
         error.code === 'P2002'
