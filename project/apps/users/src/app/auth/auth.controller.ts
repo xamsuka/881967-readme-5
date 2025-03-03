@@ -13,6 +13,7 @@ import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
 import { LoginUserRequestDto } from './dto/login-user.dto';
 import { LoginUserResponseRdo } from './rdo/login-user.rdo';
+import { RestorePasswordRequestDto } from '../users/dto/restore-user-password.dto';
 
 export class UserRdo {
   public id: string;
@@ -54,7 +55,7 @@ export class AuthController {
     @Body() createUserRequestDto: CreateUserRequestDto
   ): Promise<LoginUserResponseRdo> {
     const user = await this.usersService.createOne(createUserRequestDto);
-    console.log('user', user);
+
     return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
 
@@ -62,7 +63,15 @@ export class AuthController {
     status: HttpStatus.OK,
   })
   @Patch('restore-password')
-  async restorePassword(@Request() req, @Body() updatePasswordRequestDto: any) {
-    return this.usersService.updatePassword(req.user, updatePasswordRequestDto);
+  async restorePassword(
+    @Request() req,
+    @Body() updatePasswordRequestDto: RestorePasswordRequestDto
+  ): Promise<LoginUserResponseRdo> {
+    const updatedUser = await this.usersService.updatePassword(
+      req.user,
+      updatePasswordRequestDto
+    );
+
+    return fillDto(LoginUserResponseRdo, updatedUser.toPOJO());
   }
 }
