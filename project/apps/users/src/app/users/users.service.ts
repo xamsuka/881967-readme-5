@@ -37,7 +37,6 @@ export class UsersService {
     user: LoginUserResponseRdo,
     credentials: RestorePasswordRequestDto
   ): Promise<UserEntity> {
-    console.log('req', user);
     const entityUser = await this.usersRepository.findOne(user.id);
     const { currentPassword, newPassword } = credentials;
 

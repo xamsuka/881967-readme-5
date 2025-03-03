@@ -74,7 +74,7 @@ export class BlogsController {
   @Get('/blogs-management/blogs')
   async findAll(): Promise<BlogRdo[]> {
     const blogs = await this.blogsService.findAll();
-    console.log('blogs', blogs);
+
     return blogs.map((blog) => fillDto(BlogRdo, blog.toPOJO()));
   }
 
