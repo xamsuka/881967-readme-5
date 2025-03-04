@@ -1,27 +1,4 @@
-export enum PostStatus {
-  PUBLISHED = 'PUBLISH',
-  DRAFT = 'DRAFT',
-}
-
-export enum ContentType {
-  VIDEO = 'VIDEO',
-  TEXT = 'TEXT',
-  QUOTE = 'QUOTE',
-  IMAGE = 'IMAGE',
-  LINK = 'LINK',
-}
-
-export interface Post {
-  id: string;
-  tags?: string[];
-  createdAt?: string;
-  updatedAt?: string;
-  status: PostStatus;
-  blogId: string;
-  type: ContentType;
-  likeCount: number;
-  comments?: Comment[];
-}
+import { $Enums } from '@prisma/client';
 
 export interface Comment {
   id?: string;
@@ -59,4 +36,21 @@ export interface LinkContent {
   id?: string;
   url: string;
   description: string;
+}
+
+export interface Post {
+  id?: string;
+  tags?: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+  status?: $Enums.PostStatus;
+  blogId?: string;
+  type: $Enums.ContentType;
+  likeCount?: number;
+  comments?: Comment[];
+  linkContent?: LinkContent;
+  imageContent?: ImageContent;
+  quoteContent?: QuoteContent;
+  textContent?: TextContent;
+  videoContent?: VideoContent;
 }

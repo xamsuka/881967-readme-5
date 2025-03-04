@@ -42,7 +42,7 @@ model Post {
   tags      String[]
   createdAt DateTime    @default(now()) @map("created_at")
   updatedAt DateTime    @updatedAt @map("updated_at")
-  status    PostStatus
+  status    PostStatus  @default(value: PUBLISH)
   blog      Blog        @relation(fields: [blogId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   blogId    String      @map("blog_id")
   comments  Comment[]

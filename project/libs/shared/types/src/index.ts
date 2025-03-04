@@ -1,5 +1,5 @@
 export { User } from './lib/user.interface';
-export { Comment, ContentType, Post, PostStatus } from './lib/post.interface';
+export { Comment, Post } from './lib/post.interface';
 export { File } from './lib/file.interface';
 export { Notification } from './lib/notification.interafce';
 export { Feed } from './lib/feed.interface';
