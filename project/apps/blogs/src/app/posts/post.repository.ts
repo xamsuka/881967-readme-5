@@ -100,7 +100,15 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   }
 
   async findAll(): Promise<PostEntity[]> {
-    const posts = await this.client.post.findMany();
+    const posts = await this.client.post.findMany({
+      include: {
+        imageContent: true,
+        linkContent: true,
+        quoteContent: true,
+        textContent: true,
+        videoContent: true,
+      },
+    });
 
     return posts.map(this.createEntityFromDocument, this);
   }

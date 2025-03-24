@@ -34,6 +34,7 @@ export class PostService {
   async updatePost(id: string, patchInput: UpdatePostDto): Promise<PostEntity> {
     try {
       const post = await this.postRepository.findOne(id);
+      let hasChanges = false;
 
       if (!post) {
         throw new ConflictException(`Пост с id "${id}" не существует.`);
@@ -43,8 +44,18 @@ export class PostService {
         throw new ConflictException('Невозможно изменить тип поста');
       }
 
-      const newPost = PostEntity.fromObject(patchInput);
-      return await this.postRepository.updateOne(id, newPost);
+      for (const [key, value] of Object.entries(patchInput)) {
+        if (value !== undefined && post[key] !== value) {
+          post[key] = value;
+          hasChanges = true;
+        }
+      }
+
+      if (!hasChanges) {
+        return post;
+      }
+
+      return await this.postRepository.updateOne(id, post);
     } catch (error) {
       if (
         error instanceof Prisma.PrismaClientKnownRequestError &&
