@@ -1,14 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { $Enums, Prisma } from '@prisma/client';
 import { PrismaClientService } from '@project/libs/shared/blogs/models';
-import { BasePostgresRepository } from '@project/libs/shared/core';
-import { Post } from '@project/libs/shared/types';
+import {
+  BasePostgresRepository,
+  BaseQueryParam,
+} from '@project/libs/shared/core';
+import { PaginationResult, Post } from '@project/libs/shared/types';
 import { PostEntity } from './entities/post.entity';
 
 @Injectable()
 export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
   constructor(protected readonly client: PrismaClientService) {
     super(client, PostEntity.fromObject);
+  }
+
+  private async getPostCount(where: Prisma.PostWhereInput): Promise<number> {
+    return this.client.post.count({ where });
+  }
+
+  private calculatePostsPage(totalCount: number, limit: number): number {
+    return Math.ceil(totalCount / limit);
   }
 
   async createOne(entity: PostEntity): Promise<PostEntity> {
@@ -99,18 +110,45 @@ export class PostRepository extends BasePostgresRepository<PostEntity, Post> {
     return this.createEntityFromDocument(post);
   }
 
-  async findAll(): Promise<PostEntity[]> {
-    const posts = await this.client.post.findMany({
-      include: {
-        imageContent: true,
-        linkContent: true,
-        quoteContent: true,
-        textContent: true,
-        videoContent: true,
-      },
-    });
+  async findAll(query?: BaseQueryParam): Promise<PaginationResult<PostEntity>> {
+    const skip =
+      query?.page && query?.limit ? (query.page - 1) * query.limit : undefined;
+    const take = query?.limit;
+    const where: Prisma.PostWhereInput = {};
+    const orderBy: Prisma.PostOrderByWithRelationInput = {};
 
-    return posts.map(this.createEntityFromDocument, this);
+    if (query?.sortOrder && !query.sortingBy) {
+      orderBy.createdAt = query.sortOrder;
+    }
+
+    if (query?.sortOrder && query.sortingBy && orderBy[query.sortingBy]) {
+      orderBy[query.sortingBy] = query.sortOrder;
+    }
+
+    const [records, postCount] = await Promise.all([
+      this.client.post.findMany({
+        where,
+        orderBy,
+        skip,
+        take,
+        include: {
+          imageContent: true,
+          linkContent: true,
+          quoteContent: true,
+          textContent: true,
+          videoContent: true,
+        },
+      }),
+      this.getPostCount(where),
+    ]);
+
+    return {
+      entities: records.map((record) => this.createEntityFromDocument(record)),
+      currentPage: query?.page,
+      totalPages: this.calculatePostsPage(postCount, take),
+      itemsPerPage: take,
+      totalItems: postCount,
+    };
   }
 
   async updateOne(id: string, entity: PostEntity): Promise<PostEntity> {

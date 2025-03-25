@@ -5,3 +5,6 @@ export { Notification } from './lib/notification.interafce';
 export { Feed } from './lib/feed.interface';
 export { Entity } from './lib/entity.interface';
 export { Blog } from './lib/blog.interface';
+export { PaginationResult } from './lib/pagination.interface';
+export { SortDirection } from './lib/sort-direction.interface';
+export * from './lib/rdo';

@@ -8,6 +8,8 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { PostEntity } from './entities/post.entity';
 import { Prisma } from '@prisma/client';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { PaginationResult } from '@project/libs/shared/types';
+import { BaseQueryParam } from '@project/libs/shared/core';
 
 @Injectable()
 export class PostService {
@@ -93,8 +95,10 @@ export class PostService {
     return postEntity;
   }
 
-  async getPosts(): Promise<PostEntity[]> {
-    const posts = await this.postRepository.findAll();
+  async getPosts(
+    query?: BaseQueryParam
+  ): Promise<PaginationResult<PostEntity>> {
+    const posts = await this.postRepository.findAll(query);
 
     return posts;
   }
