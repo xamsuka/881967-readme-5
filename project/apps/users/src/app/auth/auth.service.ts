@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { LoginUserRequestDto } from './dto/login-user.dto';
 import { CreateUserRequestDto } from '../users/dto/create-user.dto';
@@ -20,7 +26,7 @@ export class AuthService {
       const entityUser = await this.usersRepository.finByEmail(email);
 
       if (!entityUser) {
-        throw new HttpException(NOT_REGISTERED, HttpStatus.BAD_REQUEST);
+        throw new NotFoundException(NOT_REGISTERED);
       }
 
       const isMatch = await compare(password, entityUser.password);
@@ -28,7 +34,7 @@ export class AuthService {
       if (isMatch) {
         return entityUser;
       } else {
-        throw new HttpException(WRONG_CREDENTIALS, HttpStatus.BAD_REQUEST);
+        throw new UnauthorizedException(WRONG_CREDENTIALS);
       }
     } catch (error) {
       throw error;

@@ -5,8 +5,9 @@ import {
   Patch,
   Post,
   Request,
+  UseGuards,
 } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiResponse, ApiTags, ApiBody } from '@nestjs/swagger';
 import { fillDto } from '@project/libs/shared/helpers';
 import { CreateUserRequestDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
@@ -14,6 +15,7 @@ import { AuthService } from './auth.service';
 import { LoginUserRequestDto } from './dto/login-user.dto';
 import { LoginUserResponseRdo } from './rdo/login-user.rdo';
 import { RestorePasswordRequestDto } from '../users/dto/restore-user-password.dto';
+import { LocalAuthGuard } from './guards/local-auth.guard';
 
 export class UserRdo {
   public id: string;
@@ -36,13 +38,11 @@ export class AuthController {
     status: HttpStatus.UNAUTHORIZED,
     description: 'Password or Login is wrong.',
   })
+  @ApiBody({ type: LoginUserRequestDto })
+  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(
-    @Body() loginRequestDto: LoginUserRequestDto
-  ): Promise<LoginUserResponseRdo> {
-    const user = await this.authService.validateUser(loginRequestDto);
-
-    return fillDto(LoginUserResponseRdo, user.toPOJO());
+  async login(@Request() req): Promise<LoginUserResponseRdo> {
+    return req.user;
   }
 
   @ApiResponse({
