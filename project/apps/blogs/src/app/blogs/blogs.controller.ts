@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { fillDto } from '@project/libs/shared/helpers';
@@ -15,6 +16,7 @@ import { BlogsService } from './blogs.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { UpdateBlogDto } from './dto/update-blog.dto';
 import { BlogRdo } from './rdo/blog.rdo';
+import { IsUUID } from 'class-validator';
 
 @ApiTags('Blogs')
 @Controller()
@@ -45,10 +47,10 @@ export class BlogsController {
   @ApiOperation({ summary: 'Обновить блог по id' })
   @Patch('/blogs-management/blogs/:id')
   async updateOne(
-    @Param() params: { id: string },
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() blogInput: UpdateBlogDto
   ): Promise<BlogRdo> {
-    const blog = await this.blogsService.updateOne(params.id, blogInput);
+    const blog = await this.blogsService.updateOne(id, blogInput);
 
     return fillDto(BlogRdo, blog.toPOJO());
   }
@@ -61,8 +63,8 @@ export class BlogsController {
   @ApiOperation({ summary: 'Удалить блог по id' })
   @HttpCode(204)
   @Delete('/blogs-management/blogs/:id')
-  async deleteOne(@Param() params: { id: string }): Promise<void> {
-    return this.blogsService.deleteOne(params.id);
+  async deleteOne(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.blogsService.deleteOne(id);
   }
 
   @ApiResponse({
@@ -87,8 +89,8 @@ export class BlogsController {
   @ApiParam({ name: 'id', required: true, description: 'Идентификатор блога' })
   @ApiOperation({ summary: 'Получить блог по id' })
   @Get('/blogs-management/blogs/:id')
-  async findOne(@Param() params: { id: string }): Promise<BlogRdo> {
-    const blog = await this.blogsService.findOne(params.id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<BlogRdo> {
+    const blog = await this.blogsService.findOne(id);
 
     return fillDto(BlogRdo, blog.toPOJO());
   }

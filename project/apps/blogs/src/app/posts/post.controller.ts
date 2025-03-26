@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Patch,
   Post,
   Query,
@@ -55,10 +56,10 @@ export class PostController {
   @ApiOperation({ summary: 'Обновить пост по id' })
   @Patch('/posts-management/posts/:id')
   async updateOne(
-    @Param() params: { id: string },
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() postInput: UpdatePostDto
   ): Promise<PostRdo> {
-    const post = await this.postService.updatePost(params.id, postInput);
+    const post = await this.postService.updatePost(id, postInput);
 
     return fillDto(PostRdo, post.toPOJO());
   }
@@ -71,8 +72,8 @@ export class PostController {
   @ApiOperation({ summary: 'Удалить пост по id' })
   @HttpCode(204)
   @Delete('/posts-management/posts/:id')
-  async deleteOne(@Param() params: { id: string }): Promise<void> {
-    return this.postService.deletePost(params.id);
+  async deleteOne(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return this.postService.deletePost(id);
   }
 
   @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
@@ -84,8 +85,8 @@ export class PostController {
   @ApiParam({ name: 'id', required: true, description: 'Идентификатор поста' })
   @ApiOperation({ summary: 'Получить пост по id' })
   @Get('/posts-management/posts/:id')
-  async findOne(@Param() params: { id: string }): Promise<PostRdo> {
-    const post = await this.postService.getPost(params.id);
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<PostRdo> {
+    const post = await this.postService.getPost(id);
 
     return fillDto(PostRdo, post.toPOJO());
   }
