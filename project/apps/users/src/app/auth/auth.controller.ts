@@ -17,10 +17,6 @@ import { LoginUserResponseRdo } from './rdo/login-user.rdo';
 import { RestorePasswordRequestDto } from '../users/dto/restore-user-password.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
-export class UserRdo {
-  public id: string;
-}
-
 @ApiTags('authentication')
 @Controller('auth')
 export class AuthController {

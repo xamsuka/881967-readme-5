@@ -11,6 +11,7 @@ import {
 import { UserEntity } from './user.entity';
 import { compare, hash } from 'bcrypt';
 import { LoginUserResponseRdo } from '../auth/rdo/login-user.rdo';
+import { BaseQueryParam } from '@project/libs/shared/core';
 
 @Injectable()
 export class UsersService {
@@ -18,6 +19,10 @@ export class UsersService {
 
   async getUserById(id: string) {
     return this.usersRepository.findOne(id);
+  }
+
+  async getUsers(query?: BaseQueryParam) {
+    return this.usersRepository.findMany(query);
   }
 
   async createUser(user: CreateUserRequestDto): Promise<UserEntity> {

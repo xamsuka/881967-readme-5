@@ -19,6 +19,7 @@ async function bootstrap() {
     .setDescription('The users API description')
     .setVersion('1.0')
     .addTag('users')
+    .addBearerAuth()
     .build();
 
   const globalPrefix = 'api';
