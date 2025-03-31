@@ -8,3 +8,5 @@ export { Blog } from './lib/blog.interface';
 export { PaginationResult } from './lib/pagination.interface';
 export { SortDirection } from './lib/sort-direction.interface';
 export * from './lib/rdo';
+export { TokenPayload } from './lib/token-payload';
+export { Token } from './lib/token.interface';
