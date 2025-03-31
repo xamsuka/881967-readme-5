@@ -54,7 +54,7 @@ export class AuthController {
   async registration(
     @Body() createUserRequestDto: CreateUserRequestDto
   ): Promise<LoginUserResponseRdo> {
-    const user = await this.usersService.createOne(createUserRequestDto);
+    const user = await this.usersService.createUser(createUserRequestDto);
 
     return fillDto(LoginUserResponseRdo, user.toPOJO());
   }
@@ -67,7 +67,7 @@ export class AuthController {
     @Request() req,
     @Body() updatePasswordRequestDto: RestorePasswordRequestDto
   ): Promise<LoginUserResponseRdo> {
-    const updatedUser = await this.usersService.updatePassword(
+    const updatedUser = await this.usersService.updateUserPassword(
       req.user,
       updatePasswordRequestDto
     );

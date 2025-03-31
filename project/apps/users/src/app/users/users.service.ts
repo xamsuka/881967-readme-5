@@ -16,11 +16,11 @@ import { LoginUserResponseRdo } from '../auth/rdo/login-user.rdo';
 export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async findOne(id: string) {
+  async getUserById(id: string) {
     return this.usersRepository.findOne(id);
   }
 
-  async createOne(user: CreateUserRequestDto): Promise<UserEntity> {
+  async createUser(user: CreateUserRequestDto): Promise<UserEntity> {
     const { email, password } = user;
     const existUser = await this.usersRepository.finByEmail(email);
 
@@ -33,7 +33,7 @@ export class UsersService {
     return this.usersRepository.createOne(newUserEntity);
   }
 
-  async updatePassword(
+  async updateUserPassword(
     user: LoginUserResponseRdo,
     credentials: RestorePasswordRequestDto
   ): Promise<UserEntity> {
