@@ -2,22 +2,26 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UsersService } from '../users/users.service';
-import { LoginUserRequestDto } from './dto/login-user.dto';
-import { CreateUserRequestDto } from '../users/dto/create-user.dto';
-import { RestorePasswordRequestDto } from '../users/dto/restore-user-password.dto';
-import { UsersRepository } from '../users/users.repository';
+import { JwtService } from '@nestjs/jwt';
+import { Token, TokenPayload, User } from '@project/libs/shared/types';
 import { compare } from 'bcrypt';
-import { NOT_REGISTERED, WRONG_CREDENTIALS } from './constants/auth.constants';
-import { LoginUserResponseRdo } from './rdo/login-user.rdo';
 import { UserEntity } from '../users/user.entity';
+import { UsersRepository } from '../users/users.repository';
+import { NOT_REGISTERED, WRONG_CREDENTIALS } from './constants/auth.constants';
+import { LoginUserRequestDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private usersRepository: UsersRepository) {}
+  private readonly logger = new Logger(AuthService.name);
+
+  constructor(
+    private usersRepository: UsersRepository,
+    private jwtService: JwtService
+  ) {}
 
   async validateUser(user: LoginUserRequestDto): Promise<UserEntity | null> {
     try {
@@ -38,6 +42,24 @@ export class AuthService {
       }
     } catch (error) {
       throw error;
+    }
+  }
+
+  public async createUserToken(user: User): Promise<Token> {
+    const payload: TokenPayload = {
+      email: user.email,
+      username: user.username,
+    };
+
+    try {
+      const accessToken = await this.jwtService.signAsync(payload);
+      return { accessToken };
+    } catch (error) {
+      this.logger.error('[Token generation error]: ' + error.message);
+      throw new HttpException(
+        'Ошибка при создании токена.',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }
