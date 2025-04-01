@@ -25,7 +25,7 @@ export abstract class BaseMongoRepository<
   }
 
   async findOne(id: EntityType['id']): Promise<EntityType | null> {
-    const document = await this.model.findById(id).exec();
+    const document = await this.model.findOne({ id }).exec();
     return this.createEntityFromDocument(document);
   }
 
@@ -48,7 +48,7 @@ export abstract class BaseMongoRepository<
     entity: EntityType
   ): Promise<EntityType> {
     const updatedDocument = await this.model
-      .findByIdAndUpdate(id, entity.toPOJO(), {
+      .findOneAndUpdate({ id }, entity.toPOJO(), {
         new: true,
         runValidators: true,
       })

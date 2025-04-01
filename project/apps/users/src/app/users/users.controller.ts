@@ -1,5 +1,11 @@
 import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UserWithPaginationRdo } from './rdo/user-with-pagination.rdo';
 import { BaseQueryParam } from '@project/libs/shared/core';
 import { fillDto } from '@project/libs/shared/helpers';
@@ -45,6 +51,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Получить список пользователей' })
   @Get('/users-management/users')
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   async findAll(
     @Query() query?: BaseQueryParam
   ): Promise<PaginationResult<UserRdo>> {

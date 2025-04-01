@@ -49,6 +49,7 @@ export class AuthService {
     const payload: TokenPayload = {
       email: user.email,
       username: user.username,
+      id: user.id,
     };
 
     try {

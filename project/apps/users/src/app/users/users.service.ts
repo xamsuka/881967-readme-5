@@ -1,17 +1,18 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 
-import { CreateUserRequestDto } from './dto/create-user.dto';
-import { RestorePasswordRequestDto } from './dto/restore-user-password.dto';
-import { UsersRepository } from './users.repository';
+import { BaseQueryParam } from '@project/libs/shared/core';
+import { compare, hash } from 'bcrypt';
 import {
+  NEW_PASSWORD_MATCH_CURRENT,
   PASSWORD_DOES_NOT_MATCH,
   SALT_OR_ROUNDS,
   USES_EXISTS,
 } from './constants/users.constants';
+import { CreateUserRequestDto } from './dto/create-user.dto';
+import { RestorePasswordRequestDto } from './dto/restore-user-password.dto';
+import { UserDto } from './dto/user.dto';
 import { UserEntity } from './user.entity';
-import { compare, hash } from 'bcrypt';
-import { LoginUserResponseRdo } from '../auth/rdo/login-user.rdo';
-import { BaseQueryParam } from '@project/libs/shared/core';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
@@ -39,22 +40,29 @@ export class UsersService {
   }
 
   async updateUserPassword(
-    user: LoginUserResponseRdo,
+    id: string,
     credentials: RestorePasswordRequestDto
   ): Promise<UserEntity> {
-    const entityUser = await this.usersRepository.findOne(user.id);
+    const entityUser = await this.usersRepository.findOne(id);
     const { currentPassword, newPassword } = credentials;
 
-    const isMatch = await compare(currentPassword, entityUser.password);
+    const isMatchCurrentPassword = await compare(
+      currentPassword,
+      entityUser.password
+    );
 
-    if (!isMatch) {
+    const isMatchNewPassword = await compare(newPassword, entityUser.password);
+
+    if (isMatchNewPassword) {
+      throw new ConflictException(NEW_PASSWORD_MATCH_CURRENT);
+    }
+
+    if (!isMatchCurrentPassword) {
       throw new ConflictException(PASSWORD_DOES_NOT_MATCH);
     }
 
-    const newPasswordHash = await hash(newPassword, SALT_OR_ROUNDS);
+    const newUser = await entityUser.setPassword(newPassword);
 
-    const newUser = await entityUser.setPassword(newPasswordHash);
-
-    return this.usersRepository.updateOne(user.id, newUser);
+    return this.usersRepository.updateOne(id, newUser);
   }
 }
