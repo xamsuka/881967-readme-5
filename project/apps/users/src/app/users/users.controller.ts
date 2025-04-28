@@ -1,7 +1,16 @@
-import { Controller, Get, HttpStatus, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiParam,
   ApiQuery,
   ApiResponse,
   ApiTags,
@@ -66,5 +75,28 @@ export class UsersController {
     };
 
     return fillDto(UserWithPaginationRdo, result);
+  }
+
+  @ApiResponse({ status: HttpStatus.FORBIDDEN, description: 'Forbidden.' })
+  @ApiResponse({
+    type: UserRdo,
+    status: HttpStatus.OK,
+    description: 'Пост',
+  })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Идентификатор польтзователя',
+  })
+  @ApiOperation({
+    summary: 'Получить детальную информацию по пользователю по id',
+  })
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @Get('/users-management/users/:id')
+  async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<UserRdo> {
+    const post = await this.userService.getUserById(id);
+
+    return fillDto(UserRdo, post.toPOJO());
   }
 }
